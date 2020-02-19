@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <!-- 指定 Spring MVC 扫描含有如 @Controller 等注解的包的路径，一般为项目控制器所在包的路径。进行这一配置后无需再写入 <context:component-config />。有关 component-scan 的内容可以参见参考 13.「Spring 注解 @Component、@Repository、@Service、@Controller 区别」。这里使用 include-filter 使得只有含有 @Controller 注解的控制器 bean 会使用 Spring mvc 的上下文，参见参考 19.「在使用 spring mvc 时... @Transactional 声明的事务不起作用」。-->
+    <context:component-scan base-package="com.sdl.ticket.controller"/>
+
+    <!-- 指定视图文件后缀和所在的路径，在控制器的方法中返回的字符串值会表示这一路径下的同名文件 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 此配置使得 @ResponseBody 等注解可以生效 -->
+    <mvc:annotation-driven/>
+
+    <!-- 添加 Spring mvc 的文件上传支持 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10240000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <!-- 添加此配置用于排除 Spring mvc 对静态资源文件的处理。有关静态资源路径问题参见参考 31.「Spring mvc 访问静态资源的三种方式」 -->
+    <mvc:resources mapping="/resources/**" location="classpath*:static"/>
+    <!-- 添加拦截器 -->
+</beans>
